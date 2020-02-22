@@ -6,7 +6,7 @@ Write-Output "AutoStart: $AutoStart"
 $is_64bit = [IntPtr]::size -eq 8
 
 # setup openssh
-$ssh_download_url = "http://www.mls-software.com/files/setupssh-7.1p1-1.exe"
+$ssh_download_url = "https://www.mls-software.com/files/setupssh-7.1p1-1.exe"
 
 if (!(Test-Path "C:\Program Files\OpenSSH\bin\ssh.exe")) {
     Write-Output "Downloading $ssh_download_url"
@@ -31,10 +31,11 @@ Write-Output "Setting SSH home directories"
     Foreach-Object { $_ -replace '/home/(\w+)', '/cygdrive/c/Users/$1' } |
     Set-Content 'C:\Program Files\OpenSSH\etc\passwd'
 
+# disabled for vcloud to make vagrant-serverspec work
 # Set shell to /bin/sh to return exit status
-$passwd_file = Get-Content 'C:\Program Files\OpenSSH\etc\passwd'
-$passwd_file = $passwd_file -replace '/bin/bash', '/bin/sh'
-Set-Content 'C:\Program Files\OpenSSH\etc\passwd' $passwd_file
+# $passwd_file = Get-Content 'C:\Program Files\OpenSSH\etc\passwd'
+# $passwd_file = $passwd_file -replace '/bin/bash', '/bin/sh'
+# Set-Content 'C:\Program Files\OpenSSH\etc\passwd' $passwd_file
 
 # fix opensshd to not be strict
 Write-Output "Setting OpenSSH to be non-strict"
